@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Campus Lost & Found</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                <i class="bi bi-compass-fill me-2"></i>
+                Campus Lost & Found
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">
+                            <i class="bi bi-grid-1x2 me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="report_items.html">
+                            <i class="bi bi-plus-circle me-1"></i> Report Item
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="items.html">
+                            <i class="bi bi-search me-1"></i> Lost & Found Items
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">
+                            <i class="bi bi-shield-lock me-1"></i> Admin
+                        </a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-sm btn-outline-light rounded-pill px-3 mt-1" href="#" onclick="logout(); return false;">
+                            <i class="bi bi-box-arrow-right me-1"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container page-container">
+        <div class="page-heading">
+            <div>
+                <h1>Lost & Found Dashboard</h1>
+                <p>Track lost items, recovery status and recent reports</p>
+            </div>
+            <a href="report_items.html" class="btn btn-primary-custom">
+                <i class="bi bi-plus-lg me-1"></i> Report New Item
+            </a>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <span class="stat-label">Total Reports</span>
+                    <div class="stat-number" id="totalReportsCount">0</div>
+                    <span class="stat-note">All submitted items</span>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <span class="stat-label">Lost Items</span>
+                    <div class="stat-number" id="lostItemsCount">0</div>
+                    <span class="stat-note">Reported missing on campus</span>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <span class="stat-label">Found Items</span>
+                    <div class="stat-number" id="foundItemsCount">0</div>
+                    <span class="stat-note">Items awaiting owners</span>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <span class="stat-label">Pending Approval</span>
+                    <div class="stat-number" id="pendingReportsCount">0</div>
+                    <span class="stat-note">Awaiting admin review</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="content-card h-100">
+                    <div class="section-heading">
+                        <h2>Reports Breakdown</h2>
+                    </div>
+                    <div class="chart-wrap">
+                        <canvas id="reportsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="content-card h-100">
+                    <div class="section-heading">
+                        <h2>Recent Submissions</h2>
+                        <a href="items.html">View All Items &rarr;</a>
+                    </div>
+                    <div id="recentReportsContainer"></div>
+
+                    <div class="quick-actions pt-3 border-top">
+                        <a href="report_items.html"><i class="bi bi-plus-circle me-1"></i> Submit Report</a>
+                        <a href="items.html"><i class="bi bi-search me-1"></i> Browse Board</a>
+                        <a href="admin.html"><i class="bi bi-shield-check me-1"></i> Admin Panel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer mt-auto">
+        <div class="container">
+            &copy; 2026 Campus Lost & Found. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
