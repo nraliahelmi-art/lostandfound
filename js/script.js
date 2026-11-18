@@ -1,4 +1,6 @@
 const STORAGE_KEY = "campusLostFoundItems";
+const VERSION_KEY = "campusLostFoundVersion";
+const CURRENT_DATA_VERSION = "v4.0";
 const USERS_KEY = "campusLostFoundUsers";
 const AUTH_KEY = "campusLostFoundSession";
 
@@ -150,18 +152,14 @@ const defaultItems = [
 ];
 
 function initializeStorage() {
+    const savedVersion = localStorage.getItem(VERSION_KEY);
     const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    const needsUpdate =
-        existing.length < defaultItems.length ||
-        existing.some(
-            item =>
-                (item.image && item.image.includes("6927335")) ||
-                (item.image && item.image.includes("159711"))
-        );
 
-    if (!localStorage.getItem(STORAGE_KEY) || existing.length === 0 || needsUpdate) {
+    if (savedVersion !== CURRENT_DATA_VERSION || existing.length === 0) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultItems));
+        localStorage.setItem(VERSION_KEY, CURRENT_DATA_VERSION);
     }
+
     if (!localStorage.getItem(USERS_KEY)) {
         const defaultUsers = [
             { name: "Student", username: "student", password: "student123", role: "student" },
@@ -326,7 +324,7 @@ function setupReportForm() {
     }
 
     const imageInput = document.getElementById("itemImage");
-    const previewContainer = document.getElementById("imagePreviewContainer") || document.getElementById("imagePreview");
+    const previewContainer = document.getElementById("imagePreview");
     const submitBtn = reportForm.querySelector('button[type="submit"]');
     let uploadedImageBase64 = "";
     let isProcessingImage = false;
@@ -354,7 +352,7 @@ function setupReportForm() {
 
             const instantUrl = URL.createObjectURL(file);
             if (previewContainer) {
-                previewContainer.innerHTML = `<img id="imagePreview" src="${instantUrl}" alt="Preview">`;
+                previewContainer.innerHTML = `<img src="${instantUrl}" alt="Preview" style="max-height: 180px; border-radius: 10px; margin-top: 10px;">`;
             }
 
             const reader = new FileReader();
@@ -457,15 +455,15 @@ function loadDashboard() {
             recentContainer.innerHTML = `<p class="empty-note">No reports submitted yet.</p>`;
         } else {
             recentContainer.innerHTML = recentItems.map(item => `
-                <div class="recent-report-item d-flex justify-content-between align-items-center">
+                <div class="recent-report-item d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center gap-3">
                         ${item.image 
-                            ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" style="width: 46px; height: 46px; object-fit: cover; border-radius: 10px;">`
+                            ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" onerror="this.style.display='none'" style="width: 46px; height: 46px; object-fit: cover; border-radius: 10px;">`
                             : `<div style="width: 46px; height: 46px; border-radius: 10px; background: #F6ECE7; display: flex; align-items: center; justify-content: center; color: #6D5E63;"><i class="bi bi-box-seam"></i></div>`
                         }
                         <div>
-                            <h6>${escapeHTML(item.name)}</h6>
-                            <p>${escapeHTML(item.location)} &bull; ${escapeHTML(item.date)}</p>
+                            <h6 class="mb-0">${escapeHTML(item.name)}</h6>
+                            <p class="small text-muted mb-0">${escapeHTML(item.location)} &bull; ${escapeHTML(item.date)}</p>
                         </div>
                     </div>
                     <div class="d-flex gap-2 align-items-center">
@@ -548,9 +546,9 @@ function loadItemsPage() {
 
         itemsGrid.innerHTML = filtered.map(item => `
             <div class="col-md-6 col-lg-4">
-                <div class="item-card d-flex flex-column">
+                <div class="item-card d-flex flex-column h-100">
                     ${item.image
-                        ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" class="item-image">`
+                        ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" class="item-image" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=No+Image';">`
                         : `<div class="item-placeholder"><i class="bi bi-image me-2"></i> No Image Available</div>`
                     }
                     <div class="item-card-body d-flex flex-column flex-grow-1">
@@ -591,7 +589,7 @@ function openItemModal(itemId) {
     if (modalTitle) modalTitle.textContent = item.name;
 
     modalBody.innerHTML = `
-        ${item.image ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" class="modal-item-image">` : ""}
+        ${item.image ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" class="modal-item-image mb-3" style="width:100%; border-radius:10px;" onerror="this.style.display='none'">` : ""}
         <div class="mb-3 d-flex gap-2">
             <span class="status-pill ${item.type === "Lost" ? "status-lost" : "status-found"}">${escapeHTML(item.type)}</span>
             <span class="status-pill status-${item.status.toLowerCase()}">${escapeHTML(item.status)}</span>
@@ -656,7 +654,7 @@ function loadAdminPage() {
                 <td>
                     <div class="d-flex align-items-center gap-2">
                         ${item.image 
-                            ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 8px;">`
+                            ? `<img src="${item.image}" alt="${escapeHTML(item.name)}" onerror="this.style.display='none'" style="width: 42px; height: 42px; object-fit: cover; border-radius: 8px;">`
                             : `<div style="width: 42px; height: 42px; border-radius: 8px; background: #F6ECE7; display: flex; align-items: center; justify-content: center; color: #6D5E63;"><i class="bi bi-image"></i></div>`
                         }
                         <div>
